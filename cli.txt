@@ -1,0 +1,1 @@
+python .\plot_n2o_flux.py --data .\data\Yisiou-gh-s1-n2o-2026-05-13.json --out .\out\Yisiou-gh-s1-n2o-2026-05-13
