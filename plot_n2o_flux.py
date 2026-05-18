@@ -202,8 +202,8 @@ def _nis_pretest() -> Project:
             name="NI",
             levels=["NO", "DMPP", "DCD", "Neem"],
             encoding="hatch",
-            palette={"NO": "", "DMPP": "////",
-                     "DCD": "xxxx", "Neem": "----"},
+            palette={"NO": "", "DMPP": "/",
+                     "DCD": "x", "Neem": "-"},
             legend_title="INHIBITOR (PATTERN)",
         ),
     ]
