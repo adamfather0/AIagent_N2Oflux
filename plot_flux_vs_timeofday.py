@@ -100,12 +100,33 @@ def main():
                    color=date_color[d], edgecolor="black", linewidth=0.4,
                    label=d.isoformat())
 
+    # --- Trend line on pooled points ---------------------------------
+    all_x = np.array([hod(ts) for ts, _, _ in all_points])
+    all_y = np.array([fx for _, fx, _ in all_points])
+
+    n_unique_x = len(np.unique(np.round(all_x, 2)))
+    span = all_x.max() - all_x.min()
+    # Use quadratic only when there's enough x-spread and points; otherwise linear.
+    degree = 2 if (n_unique_x >= 4 and span >= 2 and len(all_x) >= 6) else 1
+    coefs = np.polyfit(all_x, all_y, degree)
+    poly = np.poly1d(coefs)
+    y_pred = poly(all_x)
+    ss_res = np.sum((all_y - y_pred) ** 2)
+    ss_tot = np.sum((all_y - all_y.mean()) ** 2)
+    r2 = 1 - ss_res / ss_tot if ss_tot > 0 else float("nan")
+
+    xx = np.linspace(all_x.min(), all_x.max(), 200)
+    ax.plot(xx, poly(xx), color="black", linewidth=1.5,
+            label=f"Fit (deg {degree}, R²={r2:.3f})")
+
+    # --- Adapt x-axis to data ----------------------------------------
+    pad = max(0.2, 0.05 * span)
+    ax.set_xlim(all_x.min() - pad, all_x.max() + pad)
+
     ax.set_xlabel("Time of day (hour)")
     ax.set_ylabel(r"N$_2$O flux  ($F_o$, nmol m$^{-2}$ s$^{-1}$)")
     ax.set_title(f"N$_2$O flux vs time-of-day  ({len(all_points)} points, "
                  f"{len(files)} files)")
-    ax.set_xlim(0, 24)
-    ax.set_xticks(range(0, 25, 2))
     ax.axhline(0, color="black", linewidth=0.5)
     ax.grid(True, linestyle=":", alpha=0.5)
     ax.spines["top"].set_visible(False)
