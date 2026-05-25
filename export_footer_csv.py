@@ -87,28 +87,36 @@ def write_csv(rows, out_path: Path):
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--data-dir", type=Path, default=DATA_DIR_DEFAULT)
-    ap.add_argument("--out-dir", type=Path, default=OUT_DIR_DEFAULT)
+    ap.add_argument("--data", type=Path, default=DATA_DIR_DEFAULT,
+                    help="Input JSON file, or directory of JSON files.")
+    ap.add_argument("--out", type=Path, default=OUT_DIR_DEFAULT,
+                    help="Output directory (created if missing).")
     ap.add_argument("--combined-name", default="treatments_footer.csv",
                     help="Filename for the combined CSV (default mode).")
-    ap.add_argument("--per-file", action="store_true",
+    ap.add_argument("--per", action="store_true",
                     help="Write one CSV per source JSON instead of combined.")
     args = ap.parse_args()
 
-    files = sorted(args.data_dir.glob("*.json"))
-    if not files:
-        print(f"No *.json under {args.data_dir}", file=sys.stderr)
+    if args.data.is_file():
+        files = [args.data]
+    elif args.data.is_dir():
+        files = sorted(args.data.glob("*.json"))
+    else:
+        print(f"--data path does not exist: {args.data}", file=sys.stderr)
         sys.exit(1)
 
-    if args.per_file:
+    if not files:
+        print(f"No *.json under {args.data}", file=sys.stderr)
+        sys.exit(1)
+
+    if args.per or args.data.is_file():
         for fp in files:
-            out = args.out_dir / f"{fp.stem}.csv"
-            write_csv(rows_from(fp), out)
+            write_csv(rows_from(fp), args.out / f"{fp.stem}.csv")
     else:
         def all_rows():
             for fp in files:
                 yield from rows_from(fp)
-        write_csv(all_rows(), args.out_dir / args.combined_name)
+        write_csv(all_rows(), args.out / args.combined_name)
 
 
 if __name__ == "__main__":
