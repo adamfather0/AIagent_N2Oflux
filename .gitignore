@@ -2,5 +2,6 @@ inputs/
 outputs/
 data/
 out/
+csv/
 __pycache__/
 *.pyc

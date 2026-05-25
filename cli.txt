@@ -1,1 +1,2 @@
-python .\plot_n2o_flux.py --data .\data\Yisiou-gh-s1-n2o-2026-05-13.json --out .\out\Yisiou-gh-s1-n2o-2026-05-13
+python .\plot_n2o_flux.py --project "NIS-pretest" --data .\data\Zaib-gh-S1-N2O-25-5-2026-re2.json --out .\out\Zaib-gh-S1-N2O-25-5-2026-re2
+python .\export_footer_csv.py --per --data .\data\Zaib-gh-S1-N2O-25-5-2026-re2.json --out .\csv\Zaib-gh-S1-N2O-25-5-2026-re2

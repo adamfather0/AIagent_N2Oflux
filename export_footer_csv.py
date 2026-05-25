@@ -18,7 +18,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 DATA_DIR_DEFAULT = Path(__file__).parent / "data"
-OUT_DIR_DEFAULT = Path(__file__).parent / "out"
+OUT_DIR_DEFAULT = Path(__file__).parent / "csv"
 
 FOOTER_TOPLEVEL = ["P_o", "T_o", "W_o"]
 FLUX_FIELDS = ["name", "F_o", "F_cv", "t_o", "C_o", "a", "C_x",
